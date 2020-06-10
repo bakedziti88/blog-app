@@ -10,6 +10,7 @@ const userReducer = (state = null, action) => {
 	}
 	else if (action.type === 'LOGOUT') {
 		window.localStorage.removeItem('logged-in-user')
+		postService.setToken(null)
 		return null
 	}
 	else if (action.type === 'RESTORE') {

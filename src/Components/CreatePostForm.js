@@ -10,8 +10,7 @@ const CreatePostForm = () => {
 	const dispatch = useDispatch()
 	
 	const [titleInput, setTitleInput] = useState('')
-	const [authorInput, setAuthorInput] = useState('')
-	const [urlInput, setUrlInput] = useState('')
+	const [bodyInput, setBodyInput] = useState('')
 	
 	
 	
@@ -22,47 +21,32 @@ const CreatePostForm = () => {
 		handler: ({target}) => {setTitleInput(target.value)},
 		inputType: 'text'
 	}
-	const authorInputProps = {
-		name: 'author',
-		label: 'author',
-		value: authorInput,
-		handler: ({target}) => {setAuthorInput(target.value)},
-		inputType: 'text'
-	}
-	const urlInputProps = {
-		name: 'url',
-		label: 'url',
-		value: urlInput,
-		handler: ({target}) => {setUrlInput(target.value)},
-		inputType: 'text'
-	}
 
 	const ti = titleInputProps
-	const ai = authorInputProps
-	const ui = urlInputProps
 	
+	
+	//TODO: Create some sort of notification to let them know post was created ok
 	const createPostHandler = async (event) => {
 		event.preventDefault()
 		const newPost = {
 			title: titleInput,
-			author: authorInput,
-			url: urlInput,
+			body: bodyInput
 		}
 		dispatch(createPost(newPost))
 		setTitleInput('')
-		setAuthorInput('')
-		setUrlInput('')
+		setBodyInput('')
 	}
 	
+	
+	//TODO: Use an actual text editor rather than text area, consider editor.js. Do this at the end when making site look nice
 	return (
 		<>
 			<h2>Create New Posts Here</h2>
 			<form onSubmit = {createPostHandler}>
 				<LabeledTextInput name = {ti.name} inputType = {ti.inputType} value = {ti.value} label = {ti.label} handler = {ti.handler} />
 				<br />
-				<LabeledTextInput name = {ai.name} inputType = {ai.inputType} value = {ai.value} label = {ai.label} handler = {ai.handler} />
-				<br />
-				<LabeledTextInput name = {ui.name} inputType = {ui.inputType} value = {ui.value} label = {ui.label} handler = {ui.handler} />
+				<label htmlFor = 'body'>Post: </label>
+				<textarea onChange = {({target}) => setBodyInput(target.value)} id = 'body' value = {bodyInput}></textarea>
 				<br />
 				<button type = "submit">Create Post</button>
 			</form>

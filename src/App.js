@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import {useDispatch, useSelector} from 'react-redux'
-import { BrowserRouter as Router, Switch, Link, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Link, Route, Redirect} from 'react-router-dom'
 
 import Grid from '@material-ui/core/Grid'
 
@@ -53,19 +53,16 @@ const App = () => {
 		)
 	}
 	
-	const listPosts = () => {
+	const appContent = () => {
 		return (
 			<>
-				<h3>Welcome back, {user.name.first}</h3>
-				{ user && <button onClick = {logoutHandler}>Log Out</button> }
+				{ user && <h3>Welcome back, {user.name.first}</h3> }
 				<Switch>
 					<Route path = '/posts'>
 						{postsRoute()}
 					</Route>
 					<Route path = '/create'>
-						<OpenableDisplay showLabel = 'Create Post' hideLabel = 'Cancel'>
-							<CreatePostForm />
-						</OpenableDisplay>
+						{ user === null ? <Redirect to = '/login'/> : <CreatePostForm /> }
 					</Route>
 					<Route path = '/users/:id'>
 						<UserView />
@@ -73,7 +70,9 @@ const App = () => {
 					<Route path = '/users'>
 						<UserTable />
 					</Route>
-					
+					<Route path = '/login'>
+						{user ? <Redirect to = '/posts' /> : <LoginForm />}
+					</Route>
 				</Switch>
 			</>
 		)
@@ -85,7 +84,7 @@ const App = () => {
 			<Router>
 				<NavigationBar />
 				<h1>Cooking Blog App With Recipes :)</h1>
-				{ user === null ? <LoginForm /> : listPosts() }
+				{ appContent() }
 			</Router>
 		</div>
 	)

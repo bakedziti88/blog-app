@@ -74,7 +74,7 @@ const PostList = () => {
 			<>
 				<Grid container spacing = {3}>
 					<Grid item xs = {6}>
-						{posts.map(post => <p key = {post.id} onClick = {() => dispatch(getPost(post.id))}><Link to = {`/posts?pid=${post.id}`}>{post.title} by {post.author}</Link></p>)}
+						{posts.map(post => <p key = {post.id} onClick = {() => dispatch(getPost(post.id))}><Link to = {`/posts?pid=${post.id}`}>{post.title}</Link></p>)}
 					</Grid>
 					<Grid item xs = {6}>
 						<Post post = {post} />
