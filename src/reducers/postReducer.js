@@ -37,6 +37,28 @@ const postReducer = (state = initialState, action) => {
 			order: action.data.order
 		}
 	}
+	else if (action.type === 'ADD_COMMENT') {
+		const comment = action.data.comment
+		const id = action.data.parentPost
+		
+		console.log(id)
+		console.log(comment)
+		
+		if (comment && id) {
+			const affectedPost = state.data.find(p => p.id === id)
+			const updatedPost = {
+				...affectedPost,
+				comments: affectedPost.comments.concat(comment)
+			}
+			return {
+				...state,
+				data: state.data.map(post => post.id === id ? updatedPost : post)
+			}
+		}
+		else {
+			return state
+		}
+	}
 	return state
 }
 
@@ -120,5 +142,24 @@ export const sort = (order) => {
 		})
 	}
 }
+
+export const addComment = (id, comment) => {
+	return async dispatch => {
+		try {
+			const res = await postService.addComment(id, comment)
+			dispatch({
+				type: 'ADD_COMMENT',
+				data: {
+					comment: res.comment,
+					parentPost: id
+				}
+			})
+		}
+		catch (e) {
+			console.log(e.message)
+		}
+	}
+}
+
 
 export default postReducer

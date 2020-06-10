@@ -3,6 +3,7 @@ import queryString from 'query-string'
 import moment from 'moment'
 
 import Likes from './Likes'
+import CommentForm from './CommentForm'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams, useLocation } from 'react-router-dom'
@@ -69,6 +70,10 @@ const Post = ({post}) => {
 				</p>
 				<Likes id = {post.id} likes = {post.likes} addLike = {like} />
 				<br />
+				<hr />
+				<h4>Comments! Refactor this later into an actual component</h4>
+				<h4>Comment form here. Make into openable display</h4>
+				<CommentForm parentPost = {post.id}/>
 				<button onClick = {() => dispatch(getPost(null))}>Close (Refactor this later)</button>
 			</div>
 		</div>
