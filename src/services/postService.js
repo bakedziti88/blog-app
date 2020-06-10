@@ -33,6 +33,11 @@ const updatePost = async (post) => {
 	return response.data
 }
 
+const likePost = async (post) => {
+	const response = await axios.put(`${baseurl}/${post.id}/like`, post)
+	return response.data
+}
+
 const deletePost = async (id) => {
 	const config = {
 		headers: {
@@ -48,4 +53,4 @@ const addComment = async (id, comment) => {
 	return response.data
 }
 
-export default {getAllPosts, createPost, setToken, updatePost, deletePost, addComment}
+export default {getAllPosts, createPost, setToken, updatePost, deletePost, likePost, addComment}

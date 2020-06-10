@@ -1,6 +1,8 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 
+import OpenableDisplay from './OpenableDisplay'
+
 import useField from '../hooks/useField'
 
 import {addComment} from '../reducers/postReducer'
@@ -30,11 +32,13 @@ const CommentForm = ({parentPost}) => {
 	
 	return (
 		<div className = 'comment-form'>
-			<form onSubmit = {formCommentHandler}>
-				<label htmlFor = "">name: </label><input {...name} />
-				<label htmlFor = "">comment: </label><input {...comment} />
-				<button type = "submit">Add Comment</button>
-			</form>
+			<OpenableDisplay showLabel = 'Add a comment' hideLabel = 'Cancel'>
+				<form onSubmit = {formCommentHandler}>
+					<label htmlFor = "">name: </label><input {...name} />
+					<label htmlFor = "">comment: </label><input {...comment} />
+					<button type = "submit">Add Comment</button>
+				</form>
+			</OpenableDisplay>
 		</div>
 	)
 }

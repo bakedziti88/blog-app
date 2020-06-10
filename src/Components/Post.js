@@ -4,18 +4,24 @@ import moment from 'moment'
 
 import Likes from './Likes'
 import CommentForm from './CommentForm'
+import CommentList from './CommentList'
 
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams, useLocation } from 'react-router-dom'
+import { useParams, useLocation, useHistory} from 'react-router-dom'
 
 import { deletePost, likePost } from '../reducers/postReducer'
 import { notify } from '../reducers/notificationReducer'
 import { getPost } from '../reducers/fullPostReducer'
 
-const Post = ({post}) => {
+const Post = () => {
 	
 	const dispatch = useDispatch()
 	
+	const history = useHistory()
+	const location = useLocation()
+	const parsed = queryString.parse(location.search)
+	
+	const post = useSelector(state => state.posts.data.find(p => p.id === parsed.pid))
 	
 	if (!post || Object.keys(post).length === 0) {
 		return (
@@ -72,7 +78,9 @@ const Post = ({post}) => {
 				<br />
 				<hr />
 				<h4>Comments! Refactor this later into an actual component</h4>
-				<h4>Comment form here. Make into openable display</h4>
+				
+				<CommentList comments = {post.comments} />
+				
 				<CommentForm parentPost = {post.id}/>
 				<button onClick = {() => dispatch(getPost(null))}>Close (Refactor this later)</button>
 			</div>

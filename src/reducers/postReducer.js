@@ -41,9 +41,6 @@ const postReducer = (state = initialState, action) => {
 		const comment = action.data.comment
 		const id = action.data.parentPost
 		
-		console.log(id)
-		console.log(comment)
-		
 		if (comment && id) {
 			const affectedPost = state.data.find(p => p.id === id)
 			const updatedPost = {
@@ -95,25 +92,13 @@ export const likePost = (id) => {
 			likes: oldPost.likes + 1
 		}
 		
-		/*Use this commented out line if you plan to update the store with the server's copy of the update post with the like*/
-		/*I recommend using the copy created locally because then there can be no lag*/
-		/*But there could be inconsistent results*/
-		/*I think the best way really is to use the server's copy, but use a loading icon in case of slow internet*/
+		const savedPostFromServer = await postService.likePost(newPost)
 		
-			
-		//const savedPostFromServer = await postService.updatePost(newPost)
-		await postService.updatePost(newPost)
+		console.log(savedPostFromServer)
 		dispatch({
-				type: 'LIKE',
-				data: {
-					post: newPost 
-				}
-			}
-		)
-		dispatch({
-			type: 'OPEN_POST',
+			type: 'LIKE',
 			data: {
-				post: newPost
+				post: savedPostFromServer
 			}
 		})
 	}
