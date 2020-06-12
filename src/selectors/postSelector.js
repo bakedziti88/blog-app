@@ -7,23 +7,33 @@ export const getPosts = createSelector(
 	postSelector,
 	orderSelector,
 	(posts, order) => {
-		if (order === 'NAME') {
+		if (order && order.substring(0,4) === 'NAME') {
 			const sorted = posts.slice(0).sort((a, b) => {
-				if (a.title.toUpperCase() < b.title.toUpperCase()) {
-					return -1
+				if (order.substring(5) === 'ASC') {
+					return a.title.toUpperCase() > b.title.toUpperCase() ? 1 : -1
 				}
-				else if (b.title.toUpperCase() < a.title.toUpperCase())
-				{
-					return 1
-				}
-				else
-					return 0
+				return a.title.toUpperCase() < b.title.toUpperCase() ? 1 : -1
 			})
 			return sorted
 		}
-		else if (order === 'LIKES') {
+		else if (order && order.substring(0,5) === 'LIKES') {
 			const sorted = posts.slice(0).sort((a,b) => {
-				return b.likes - a.likes
+				if (order.substring(6) === 'ASC') {
+					return b.likes - a.likes
+				}
+				return a.likes - b.likes
+			})
+			return sorted
+		}
+		else if (order && order.substring(0,4) === 'DATE') {
+			const sorted = posts.slice(0).sort((a,b) => {
+				//Date ascending should be smallest dates displayed at the top, basically, older posts first
+				if (order.substring(5) === 'ASC') {
+					return b.created_at < a.created_at ? 1 : -1
+				}
+				
+				//Date descending (default order) should be most recent posts
+				return b.created_at > a.created_at ? 1 : -1
 			})
 			return sorted
 		}

@@ -1,12 +1,12 @@
 import postService from '../services/postService'
 
 const initialState = {
-	order: null,
+	order: 'DATE_DESC',
 	data: []
 }
 
 const postReducer = (state = initialState, action) => {
-	if (action.type === 'INITIALIZE') {
+	if (action.type === 'INITIALIZE_POSTS') {
 		return {
 			...state,
 			data: action.data
@@ -16,6 +16,12 @@ const postReducer = (state = initialState, action) => {
 		return {
 			...state,
 			data: state.data.concat(action.data.post)
+		}
+	}
+	else if (action.type === 'UPDATE_POST') {
+		return {
+			...state,
+			data: state.data.map(post => post.id === action.data.post.id ? action.data.post : post)
 		}
 	}
 	else if (action.type === 'DELETE') {
@@ -63,8 +69,30 @@ export const initialize = () => {
 	return async dispatch => {
 		const posts = await postService.getAllPosts()
 		dispatch({
-			type: 'INITIALIZE',
+			type: 'INITIALIZE_POSTS',
 			data: posts
+		})
+	}
+}
+
+export const editPost = (post) => {
+	return async (dispatch, getState) => {
+		const state = getState()
+		const userId = state.users.find(user => user.id === post.user.id).id
+		
+		const updatedPost = await postService.updatePost(post)
+		dispatch({
+			type: 'UPDATE_POST',
+			data: {
+				post: updatedPost
+			}
+		})
+		dispatch({
+			type: 'UPDATE_USER_AFTER_POST',
+			data: {
+				updatedPost,
+				userId
+			}
 		})
 	}
 }
@@ -94,7 +122,6 @@ export const likePost = (id) => {
 		
 		const savedPostFromServer = await postService.likePost(newPost)
 		
-		console.log(savedPostFromServer)
 		dispatch({
 			type: 'LIKE',
 			data: {
@@ -107,11 +134,21 @@ export const likePost = (id) => {
 export const deletePost = (id) => {
 	return async (dispatch, getState) => {
 		
+		const state = getState()
+		const userId = state.posts.data.find(post => post.id === id).user.id
+		
 		await postService.deletePost(id)
 		dispatch({
 			type: 'DELETE',
 			data: {
 				id
+			}
+		})
+		dispatch({
+			type: 'USER_DELETED_POST',
+			data: {
+				postId: id,
+				userId
 			}
 		})
 	}

@@ -12,9 +12,13 @@ import Notification from './Components/Notification'
 import OpenableDisplay from './Components/OpenableDisplay'
 import UserTable from './Components/UserTable'
 import UserView from './Components/UserView'
+import RegisterForm from './Components/RegisterForm'
+import EditForm from './Components/EditForm'
 
 import { logout, restoreUser } from './reducers/userReducer'
 import { notify } from './reducers/notificationReducer'
+import { initialize } from './reducers/postReducer'
+import { initializeUsers } from './reducers/userDataReducer'
 
 
 const App = () => {
@@ -37,6 +41,17 @@ const App = () => {
 		dispatch(restoreUser())
 	}, [dispatch])
 	
+	useEffect(() => {
+		/*
+			You might be wondering why I choose to initialize both users and posts, if we're only dealing with users on this page
+			If you don't initialize posts, you run into the problem of not being able to delete a post properly, because
+			it won't be in the store to begin with. Therefore, on the first render, we need to make sure there's something in both
+			posts and users state.
+		*/
+		dispatch(initializeUsers())
+		dispatch(initialize())
+	}, [])
+	
 	const debug = {
 		border: '1px solid black'
 	}
@@ -58,6 +73,9 @@ const App = () => {
 			<>
 				{ user && <h3>Welcome back, {user.name.first}</h3> }
 				<Switch>
+					<Route path = '/posts/:id'>
+						{postsRoute()}
+					</Route>
 					<Route path = '/posts'>
 						{postsRoute()}
 					</Route>
@@ -72,6 +90,15 @@ const App = () => {
 					</Route>
 					<Route path = '/login'>
 						{user ? <Redirect to = '/posts' /> : <LoginForm />}
+					</Route>
+					<Route path = '/register'>
+						{user ? <Redirect to = '/posts' /> : <RegisterForm />}
+					</Route>
+					<Route path = '/edit/:id'>
+						<EditForm />
+					</Route>
+					<Route path = '*'>
+						<p>404 Not found</p>
 					</Route>
 				</Switch>
 			</>

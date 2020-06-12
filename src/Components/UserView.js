@@ -1,31 +1,45 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 
 import userService from '../services/userService'
 
-import { initializeUsers } from '../reducers/userDataReducer'
-
 const UserView = () => {
-	const [user, setUser] = useState(null)
+	
+	const dispatch = useDispatch()
 	const id = useParams().id
 	
-	console.log(user)
+	const user = useSelector(state => state.users.find(user => user.id === id))
 	
-	useEffect(() => {
-		const findUser = async () => {
-			setUser(await userService.getUser(id))
-		}
-		findUser()
-	}, [])
+	const loggedInUser = useSelector(state => state.user)
+	const isLoggedInUser = (loggedInUser && user) ? loggedInUser.id === user.id : false
+	
+	if (!user) {
+		return <p>User not found</p>
+	}
+	
+	const listPost = (post) => {
+		return(
+			<div key = {post.id}>
+				<li>
+					<Link to = {`/posts/${post.id}`}>{post.title}</Link>
+					{isLoggedInUser && <Link to = {`/edit/${post.id}`}><button>Edit Post</button></Link>}
+				</li>
+			</div>
+		)
+	}
 	
 	const view = () => {
 		return (
 			<>
 				<h2>Posts by {user.name.first + ' ' + user.name.last}</h2>
+				{user.posts.length > 0 ?
 				<ul>
-					{user.posts.map(post => <li key = {post.id}><Link to = {`/posts/${post.id}`}>{post.title}</Link></li>)}
+					{user.posts.map(post => listPost(post))}
 				</ul>
+				:
+				<p>{`${user.name.first} ${user.name.last} does not have any posts`}</p>
+				}
 			</>
 		)
 	}

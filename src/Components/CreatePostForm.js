@@ -12,8 +12,6 @@ const CreatePostForm = () => {
 	const [titleInput, setTitleInput] = useState('')
 	const [bodyInput, setBodyInput] = useState('')
 	
-	
-	
 	const titleInputProps = {
 		name: 'title',
 		label: 'title',

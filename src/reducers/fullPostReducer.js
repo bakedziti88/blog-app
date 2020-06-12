@@ -2,7 +2,6 @@
 
 const fullPostReducer = (state = {}, action) => {
 	if (action.type === 'OPEN_POST') {
-		console.log(action.data.post)
 		return action.data.post
 	}
 	return state

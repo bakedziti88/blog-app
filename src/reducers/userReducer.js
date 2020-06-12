@@ -1,3 +1,5 @@
+//!!!!THIS REDUCER IS FOR LOGIN INFO ONLY. FOR ALL USER INFORMATION STATE, GO TO USERDATAREDUCER!!!!
+
 import loginService from '../services/login'
 import postService from '../services/postService'
 
